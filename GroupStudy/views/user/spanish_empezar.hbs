@@ -1,0 +1,36 @@
+<section class="u-full-width" style="margin-top: 10%">
+  <div class="container centered">
+    <div class="twelve columns">
+
+      <form action="/spanish/empezar/completar" method="POST">
+        <div class="row">
+          <div class="six columns">
+            <label>Nombre Completo</label>
+            <input class="u-full-width remove-margin-bottom" type="text" name="fullName" value="{{fullName}}">
+            {{#if errorName}}
+              <p class="error">necesario</p>
+            {{else}}
+              <p class="space">.</p>
+            {{/if}}
+          </div>
+          <div class="six columns">
+            <label>Número de Teléfono</label>
+            <input class="u-full-width remove-margin-bottom" type="text" name="phoneNumber" value="{{phoneNumber}}">
+            {{#if errorPhone}}
+              <p class="error">necesario</p>
+            {{else}}
+              <p class="space">.</p>
+            {{/if}}
+          </div>
+        </div>
+
+        <p class="text-center extra-padding-top-3">
+          <input class="button-primary" type="submit" value="Completar">
+        </p>
+
+      </form>
+
+    </div>
+  </div>
+  </div>
+</section>

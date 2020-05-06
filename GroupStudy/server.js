@@ -34,25 +34,103 @@ app.use(session({ secret: "This is a big long secret lama string." }));
 app.use(express.static(path.join(__dirname, 'static')));
 
 
-
-handlebars.registerHelper('joined', function (sessionId, userAttending, options) {
-  if (!userAttending.includes("-" + sessionId)) {
-    return options.fn(this);
-  }
-  return options.inverse(this);
-});
-
-handlebars.registerHelper('users', function (userId, sessionId, options) {
-  if (userId != sessionId) {
-    return options.fn(this);
-  }
-  return options.inverse(this);
-});
-
 //////////////////////////////////////////////////////////////////
 app.get('/', (request, response) => {
   response.render("user/start"); 
 });
+
+
+
+//////////////////////////////////////////////////////////////////
+app.get('/english', (request, response) => {
+  response.render("user/english_instructions"); 
+});
+
+app.get('/english/get_started', (request, response) => {
+  response.render("user/english_get_started"); 
+});
+
+app.post('/english/get_started/submit', (request, response) => {
+
+  fullName = request.body.fullName
+  phoneNumber = request.body.phoneNumber
+
+  nameEmpty = false 
+  phoneEmpty = false 
+
+  if (fullName.trim().length == 0) {
+    nameEmpty = true 
+  } 
+
+  if (phoneNumber.trim().length == 0) {
+    phoneEmpty = true 
+  }
+
+  if (nameEmpty || phoneEmpty) {
+    response.render("user/english_get_started", {errorName : nameEmpty, errorPhone: phoneEmpty, fullName: fullName, phoneNumber: phoneNumber})
+    return
+  }
+
+  Queue.create({
+    name: fullName,
+    phone_number: phoneNumber,
+    status: 0,
+  }).then(queue => {
+    
+    response.writeHeader(200, {"Content-Type": "text/html"});  
+    response.write("it has been posted");  
+    response.end();     
+    
+  });
+
+});
+
+
+//////////////////////////////////////////////////////////////////
+app.get('/spanish', (request, response) => {
+  response.render("user/spanish_instructions"); 
+});
+
+app.get('/spanish/empezar', (request, response) => {
+  response.render("user/spanish_empezar"); 
+});
+
+app.post('/spanish/empezar/completar', (request, response) => {
+
+  fullName = request.body.fullName
+  phoneNumber = request.body.phoneNumber
+
+  nameEmpty = false 
+  phoneEmpty = false 
+
+  if (fullName.trim().length == 0) {
+    nameEmpty = true 
+  } 
+
+  if (phoneNumber.trim().length == 0) {
+    phoneEmpty = true 
+  }
+
+  if (nameEmpty || phoneEmpty) {
+    response.render("user/spanish_empezar", {errorName : nameEmpty, errorPhone: phoneEmpty, fullName: fullName, phoneNumber: phoneNumber})
+    return
+  }
+
+  Queue.create({
+    name: fullName,
+    phone_number: phoneNumber,
+    status: 0,
+  }).then(queue => {
+    
+    response.writeHeader(200, {"Content-Type": "text/html"});  
+    response.write("it has been posted in spanish");  
+    response.end();     
+    
+  });
+
+});
+
+// Start Socket 
 
 //////////////////////////////////////////////////////////////////
 var server = app.listen(app.get('port'), function () {
