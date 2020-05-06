@@ -50,8 +50,45 @@ handlebars.registerHelper('users', function (userId, sessionId, options) {
 });
 
 //////////////////////////////////////////////////////////////////
+
 app.get('/', (request, response) => {
-  response.render("user/start"); 
+  response.render("user/start");
+});
+
+//////////////////////////////////////////////////////////////////
+
+app.get('/admin', (request, response) => {
+  response.render("admin/dashboard");
+});
+
+//////////////////////////////////////////////////////////////////
+
+app.get('/admin/pending', (request, response) => {
+  response.render("admin/dashboard");
+});
+
+//////////////////////////////////////////////////////////////////
+
+app.get('/admin/waiting', (request, response) => {
+  response.render("admin/dashboard");
+});
+
+//////////////////////////////////////////////////////////////////
+
+app.get('/admin/cutting', (request, response) => {
+  response.render("admin/dashboard");
+});
+
+//////////////////////////////////////////////////////////////////
+
+app.get('/admin/account', (request, response) => {
+  response.render("admin/dashboard");
+});
+
+//////////////////////////////////////////////////////////////////
+
+app.get('/login', (request, response) => {
+  response.render("admin/login");
 });
 
 //////////////////////////////////////////////////////////////////
