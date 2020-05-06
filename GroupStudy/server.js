@@ -35,13 +35,13 @@ app.use(express.static(path.join(__dirname, 'static')));
 
 
 //////////////////////////////////////////////////////////////////
+
 app.get('/', (request, response) => {
   response.render("user/start"); 
 });
 
-
-
 //////////////////////////////////////////////////////////////////
+
 app.get('/english', (request, response) => {
   response.render("user/english_instructions"); 
 });
@@ -87,13 +87,13 @@ app.post('/english/get_started/submit', (request, response) => {
 
 
 //////////////////////////////////////////////////////////////////
+
 app.get('/spanish', (request, response) => {
   response.render("user/spanish_instructions"); 
 });
 
 app.get('/spanish/empezar', (request, response) => {
   response.render("user/spanish_empezar"); 
-});
 
 app.post('/spanish/empezar/completar', (request, response) => {
 
@@ -130,7 +130,46 @@ app.post('/spanish/empezar/completar', (request, response) => {
 
 });
 
+
 // Start Socket 
+
+
+//////////////////////////////////////////////////////////////////
+
+app.get('/admin', (request, response) => {
+  response.render("admin/dashboard");
+});
+
+//////////////////////////////////////////////////////////////////
+
+app.get('/admin/pending', (request, response) => {
+  response.render("admin/dashboard");
+});
+
+//////////////////////////////////////////////////////////////////
+
+app.get('/admin/waiting', (request, response) => {
+  response.render("admin/dashboard");
+});
+
+//////////////////////////////////////////////////////////////////
+
+app.get('/admin/cutting', (request, response) => {
+  response.render("admin/dashboard");
+});
+
+//////////////////////////////////////////////////////////////////
+
+app.get('/admin/account', (request, response) => {
+  response.render("admin/dashboard");
+});
+
+//////////////////////////////////////////////////////////////////
+
+app.get('/login', (request, response) => {
+  response.render("admin/login");
+});
+
 
 //////////////////////////////////////////////////////////////////
 var server = app.listen(app.get('port'), function () {
