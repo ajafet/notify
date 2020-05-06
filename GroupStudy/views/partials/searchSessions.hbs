@@ -1,0 +1,39 @@
+<searchSessions>
+  <h2>Search Sessions</h2>
+  <br>
+  <div class="container">
+
+      <div class="row">
+
+        {{#sessions}}
+          {{#users ../user.id user_id}}
+            <div class="card-deck mb-4" id="card-{{id}}">
+              <div class="col-3">
+                <div class="card">
+                  <div class="card-body">
+
+                    <h5 class="card-header">{{course}}</h5> <!--Name of Course-->
+                    <p class="card-text">{{description}}</p>
+
+                    <p id="cardblocktxt" class="card-text">Date: {{date}} <br>
+                                                          Time: {{time}} <br>
+                                                          Location: {{location}}</p>
+
+                    <p class="card-text">Held By: {{heldby}}</p>
+                    <p class="card-text">Going: {{going}}</p>
+                      {{#joined id ../userAttending }}
+                        <center><button class="joinBtn btn btn-primary bottom-right" id="{{id}}">Join Session</button></center>
+                      {{else}}
+                        <center><button class="leaveBtn btn btn-dark bottom-right" id="{{id}}">Leave Session</button></center>
+                      {{/joined}}
+                    </div>
+
+                  </div>
+              </div>
+            </div>
+          {{/users}}
+        {{/sessions}}
+
+        </div>
+      </div>
+</searchSessions>

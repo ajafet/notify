@@ -1,0 +1,30 @@
+{
+  "name": "project-team-7",
+  "version": "1.0.0",
+  "description": "Final Project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UTRGV-CS-3342/project-team-7.git"
+  },
+  "author": "Eddy Angel Daniel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/UTRGV-CS-3342/project-team-7/issues"
+  },
+  "homepage": "https://github.com/UTRGV-CS-3342/project-team-7#readme",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0",
+    "express-session": "^1.17.0",
+    "handlebars": "^4.5.3",
+    "handlebars-helpers": "^0.10.0",
+    "sequelize": "^5.21.2",
+    "sqlite3": "^4.1.0"
+  }
+}

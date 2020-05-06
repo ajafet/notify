@@ -1,0 +1,38 @@
+<mySessions>
+  <h2>My Sessions</h2>
+  <br>
+  <div class="container">
+
+      <div class="row">
+
+        {{#sessions}}
+        <div class="card-deck mb-4" id="card-{{id}}">
+          <div class="col-3">
+          <div class="card">
+            <div class="card-body">
+
+              <h5 class="card-header">{{course}}</h5> <!--Name of Course-->
+              <p class="card-text">{{description}}</p>
+
+              <p id="cardblocktxt" class="card-text">Date: {{date}} <br>
+                                                     Time: {{time}} <br>
+                                                     Location: {{location}}</p>
+
+              <p class="card-text">Held By: {{heldby}}</p>
+              <p class="card-text">Going: {{going}}</p>
+
+                <form action="/removeSession" method="POST">
+                  <input type="hidden" name="id" value="{{id}}">
+                  <center><button class="btn btn-danger bottom-right" type="submit">Delete Session</button></center>
+                </form>
+
+              </div>
+
+            </div>
+        </div>
+      </div>
+        {{/sessions}}
+        
+        </div>
+      </div>
+</mySessions>

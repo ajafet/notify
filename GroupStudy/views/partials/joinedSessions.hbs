@@ -1,0 +1,54 @@
+<joinedSessions>
+  <h2>Joined Sessions</h2>
+  <br>
+  <div class="container">
+
+      <div class="row">
+
+        {{#sessions}}
+        <div class="card-deck mb-4">
+          <div class="col-3">
+          <div class="card">
+            <div class="card-body">
+
+              <h5 class="card-header">{{course}}</h5> <!--Name of Course-->
+              <p class="card-text">{{description}}</p>
+
+              <p id="cardblocktxt" class="card-text">Date: {{date}} <br>
+                                                     Time: {{time}} <br>
+                                                     Location: {{location}}</p>
+
+              <p class="card-text">Held By: {{heldby}}</p>
+              <p class="card-text">Going: {{going}}</p>
+                {{#joined id ../userAttending }}
+                  <center><button class="joinBtn btn btn-primary bottom-right" page="joinSess" id="{{id}}">Join Session</button></center>
+                {{else}}
+                  <center><button class="leaveBtn btn btn-dark bottom-right" page="joinSess" id="{{id}}">Leave Session</button></center>
+                {{/joined}}
+              </div>
+
+            </div>
+        </div>
+      </div>
+        {{/sessions}}
+        </div>
+      </div>
+</joinedSessions>
+
+<!--
+    <h2>All Sessions Page</h2>
+    <div class="bricklayer">
+        {{#sessions}}
+        <div class="card">
+            <h5 class="card-header">{{name}}</h5>
+            <div class="card-body">
+                <h5 class="card-title">{{location}}</h5>
+                <h5 class="card-title">{{date}}</h5>
+                <p class="card-text">{{description}}</p>
+                <a href="#" class="btn btn-primary">Join</a>
+            </div>
+        </div>
+        {{/sessions}}
+    </div>
+
+</allSessions> -->

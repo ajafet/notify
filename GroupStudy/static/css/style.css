@@ -1,0 +1,22 @@
+/* .row {
+  display: flex;
+} */
+
+
+.bottom-right {
+  position: absolute;
+  bottom: 15px;
+  left: 100px;
+}
+
+#cardblocktxt {
+  font-size: 12px;
+}
+
+.card {
+  padding: 16px;
+  text-align: left;
+  background-color: #f1f1f1;
+  width: 320px;
+  height: 390px;
+}
