@@ -1,9 +1,3 @@
-<script src="/socket.io/socket.io.js"></script>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script>
-  var socket = io(); 
-  socket.emit('newUserWaiting');
-</script>
 
 <section class="u-full-width" style="margin-top: 10%">
   <div class="container centered">
@@ -20,7 +14,9 @@
 </section>
 
 <script> 
-  socket.on("{{id}}", function(msg){
+  var socket = io(); 
+  socket.emit('userWaiting');
+  socket.on({{id}}, function(msg){
     $('#line').html(msg); 
   });
 </script>

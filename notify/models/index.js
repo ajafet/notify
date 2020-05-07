@@ -12,7 +12,9 @@ const sequelize = new Sequelize({
 
 // import models
 const Queue = sequelize.import("./queue.js");
+const Users = sequelize.import("./users.js");
 
 module.exports = {
   Queue,
+  Users, 
 };

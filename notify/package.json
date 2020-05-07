@@ -19,16 +19,14 @@
   "homepage": "https://github.com/UTRGV-CS-3342/project-team-7#readme",
   "dependencies": {
     "bcrypt": "^3.0.6",
-    "codyhouse-framework": "^2.6.2",
     "express": "^4.17.1",
     "express-handlebars": "^3.1.0",
     "express-session": "^1.17.0",
     "express-socket.io-session": "^1.3.5",
-    "handlebars": "^4.7.6",
+    "handlebars": "^4.5.3",
     "handlebars-helpers": "^0.10.0",
     "sequelize": "^5.21.2",
-    "session.socket.io": "^0.2.1",
     "socket.io": "^2.3.0",
-    "sqlite3": "^4.2.0"
+    "sqlite3": "^4.1.0"
   }
 }

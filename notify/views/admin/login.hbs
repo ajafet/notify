@@ -1,0 +1,31 @@
+<section class="u-full-width" style="margin-top: 10%">
+  <div class="container centered">
+    <div class="twelve columns">
+      
+      <form action="/action" method="POST">
+
+        <div class="text-center margin-bottom-sm">
+          <h1>Admin Login</h1>
+        </div>
+
+        <div class="margin-bottom-sm text-center">
+
+          <input class="form-control width-50%" type="password" name="password" placeholder="Enter pin" value="{{password}}">
+
+          {{#if invalid}}
+            <p class="error">Invalid Password</p>
+          {{else}}
+            <p class="space">.</p>
+          {{/if}}
+
+        </div>
+
+        <p class="text-center extra-padding-top-1">
+          <input class="button-primary" type="submit" value="Login">
+        </p>
+
+      </form>
+
+    </div>
+  </div>
+</section>
