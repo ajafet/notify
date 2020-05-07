@@ -19,7 +19,7 @@
     <button class="reset cd-nav-trigger js-cd-nav-trigger" aria-label="Toggle menu"><span></span></button>
 
     <ul class="cd-nav__list js-cd-nav__list">
-      <a style="padding-right: 15px;" href="/logoff">Log Off</a>
+      <a style="padding-right: 15px;" href="logoff">Log Off</a>
     </ul>
 
 
@@ -48,7 +48,7 @@
 
     <div class="cd-content-wrapper">
       <div class="text-center">
-        <h3>DASHBOARD FOR </h3>
+        <h3>CUSTOMERS CUTTING</h3>
         <br>
         <div class="container">
         <table class="u-full-width">
@@ -61,54 +61,15 @@
           </tr>
         </thead>
         <tbody>
+          {{#each queue}}
           <tr>
-            <td>1</td>
-            <td>Daniel Leal</td>
-            <td>(956) 432-3295</td>
+            <td>{{this.id}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.phone_number}}</td>
             <td><div class="btn btn-primary">Stop Cutting</td>
           </tr>
           <tr>
-            <td>2</td>
-            <td>Angel Delgado</td>
-            <td>(956) 431-7782</td>
-            <td><div class="btn btn-primary">Stop Cutting</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Dwayne Johnson</td>
-            <td>(956) 211-8933</td>
-            <td><div class="btn btn-primary">Stop Cutting</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>Elon Musk</td>
-            <td>(956) 232-9099</td>
-            <td><div class="btn btn-primary">Stop Cutting</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>George Washington</td>
-            <td>(956) 458-9421</td>
-            <td><div class="btn btn-primary">Stop Cutting</td>
-          </tr>
-          <tr>
-            <td>6</td>
-            <td>Tow Mater</td>
-            <td>(956) 548-2211</td>
-            <td><div class="btn btn-primary">Stop Cutting</td>
-          </tr>
-          <tr>
-            <td>7</td>
-            <td>Lightning McQueen</td>
-            <td>(956) 233-1223</td>
-            <td><div class="btn btn-primary">Stop Cutting</td>
-          </tr>
-          <tr>
-            <td>8</td>
-            <td>Doc Hudson</td>
-            <td>(956) 433-4222</td>
-            <td><div class="btn btn-primary">Stop Cutting</td>
-          </tr>
+            {{/each}}
         </tbody>
       </table>
     </div>
