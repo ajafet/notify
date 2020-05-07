@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.getElementsByTagName("html")[0].className += " js";</script>
+  <link rel="stylesheet" href="/admin/navcss/style.css">
+  <link rel="stylesheet" href="/user/css/skeleton.css">
+  <title>Responsive Sidebar Navigation | CodyHouse</title>
+</head>
+<body>
+  <header class="cd-main-header js-cd-main-header">
+
+    <div class="cd-logo-wrapper">
+      <a href="#0" style="padding-left: 25px;" class="cd-logo"><img src="/assets/img/notify.png" width=55%></a>
+    </div>
+
+
+    <button class="reset cd-nav-trigger js-cd-nav-trigger" aria-label="Toggle menu"><span></span></button>
+
+    <ul class="cd-nav__list js-cd-nav__list">
+      <a style="padding-right: 15px;" href="logoff">Log Off</a>
+    </ul>
+
+
+  </header> <!-- .cd-main-header -->
+
+  <main class="cd-main-content">
+    <nav class="cd-side-nav js-cd-side-nav">
+      <ul class="cd-side__list js-cd-side__list">
+        <li class="cd-side__item cd-side__item--has-children cd-side__item--comments js-cd-item--has-children">
+          <a href="waiting">View In Waiting</a>
+        </li>
+        <li class="cd-side__item cd-side__item--has-children cd-side__item--comments js-cd-item--has-children">
+          <a href="cutting">View Cutting</a>
+        </li>
+      </ul>
+
+      <br>
+
+      <ul class="cd-side__list js-cd-side__list">
+        <li class="cd-side__item cd-side__item--has-children cd-side__item--bookmarks js-cd-item--has-children">
+          <a href="account">Account</a>
+
+      </ul>
+    </nav>
+
+
+    <div class="cd-content-wrapper">
+      <div class="text-center">
+        <h3>Account Things</h3>
+      </div>
+    </div> <!-- .content-wrapper -->
+  </main> <!-- .cd-main-content -->
+  <script src="/admin/js/util.js"></script> <!-- util functions included in the CodyHouse framework -->
+  <script src="/admin/js/menu-aim.js"></script>
+  <script src="/admin/js/main.js"></script>
+</body>
+</html>
