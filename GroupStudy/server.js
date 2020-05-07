@@ -1,18 +1,13 @@
-// import the models
 const { Queue } = require('./models');
 
 const express = require('express');
 const path = require('path');
-var hbs = require('express-handlebars');
-const handlebars = require('handlebars');
-var helpers = require('handlebars-helpers');
+const hbs = require('express-handlebars');
 const session = require('express-session');
-const bcrypt = require('bcrypt');
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
+const bodyParser = require('body-parser');
 
-app = express();
-app.set('port', 8000);
+app = express(); 
+app.set('port', 3002);
 
 app.engine('hbs', hbs({
   extname: 'hbs',
@@ -21,17 +16,20 @@ app.engine('hbs', hbs({
 }));
 
 app.set('view engine', 'hbs');
-
-// setup body parsing for form data
-var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// set up session (in-memory storage by default)
-app.use(session({ secret: "This is a big long secret lama string." }));
+app.use(session({ 
+  secret: "This is a big long secret lama string.", 
+  resave: true,
+  saveUninitialized: true, 
+}));
 
-// setup static file service
 app.use(express.static(path.join(__dirname, 'static')));
+
+
+var http = require('http').createServer(app);
+var io = require('socket.io').listen(http);
 
 
 //////////////////////////////////////////////////////////////////
@@ -39,8 +37,6 @@ app.use(express.static(path.join(__dirname, 'static')));
 app.get('/', (request, response) => {
   response.render("user/start"); 
 });
-
-//////////////////////////////////////////////////////////////////
 
 app.get('/english', (request, response) => {
   response.render("user/english_instructions"); 
@@ -76,17 +72,24 @@ app.post('/english/get_started/submit', (request, response) => {
     phone_number: phoneNumber,
     status: 0,
   }).then(queue => {
-    
-    response.writeHeader(200, {"Content-Type": "text/html"});  
-    response.write("it has been posted");  
-    response.end();     
-    
+
+    request.session.id = queue.id;
+
+    Queue.findOne({
+      where: {id: request.session.id}
+    }).then(queue => {
+      console.log(queue); 
+    }); 
+
+    // response.redirect("/english/waiting?id=" + queue.id);
+
   });
 
 });
 
-
-//////////////////////////////////////////////////////////////////
+app.get('/english/waiting', (request, response) => {
+  response.render("user/english_waiting", {id: request.query.id}); 
+});
 
 app.get('/spanish', (request, response) => {
   response.render("user/spanish_instructions"); 
@@ -94,6 +97,7 @@ app.get('/spanish', (request, response) => {
 
 app.get('/spanish/empezar', (request, response) => {
   response.render("user/spanish_empezar"); 
+}); 
 
 app.post('/spanish/empezar/completar', (request, response) => {
 
@@ -121,17 +125,16 @@ app.post('/spanish/empezar/completar', (request, response) => {
     phone_number: phoneNumber,
     status: 0,
   }).then(queue => {
-    
-    response.writeHeader(200, {"Content-Type": "text/html"});  
-    response.write("it has been posted in spanish");  
-    response.end();     
-    
+    request.session.id = queue.id;
+    response.redirect("/spanish/esperando?id=" + queue.id); 
   });
 
 });
 
-
-// Start Socket 
+// socket stuff goes here 
+app.get('/spanish/esperando', (request, response) => { 
+  response.render("user/spanish_esperando", {id: request.query.id}); 
+});
 
 
 //////////////////////////////////////////////////////////////////
@@ -140,38 +143,103 @@ app.get('/admin', (request, response) => {
   response.render("admin/dashboard");
 });
 
-//////////////////////////////////////////////////////////////////
-
 app.get('/admin/pending', (request, response) => {
   response.render("admin/dashboard");
 });
-
-//////////////////////////////////////////////////////////////////
 
 app.get('/admin/waiting', (request, response) => {
   response.render("admin/dashboard");
 });
 
-//////////////////////////////////////////////////////////////////
-
 app.get('/admin/cutting', (request, response) => {
   response.render("admin/dashboard");
 });
-
-//////////////////////////////////////////////////////////////////
 
 app.get('/admin/account', (request, response) => {
   response.render("admin/dashboard");
 });
 
-//////////////////////////////////////////////////////////////////
-
 app.get('/login', (request, response) => {
   response.render("admin/login");
 });
 
-
 //////////////////////////////////////////////////////////////////
-var server = app.listen(app.get('port'), function () {
-  console.log("Server started...")
+
+io.on('connection', (socket) => {
+
+  socket.on('newUserWaiting', (msg) => { 
+
+    Queue.findAll({
+      where: {
+        status: 0, 
+      }
+    }).then(queue => {
+      
+      line = 1
+
+      queue.forEach(customer => {        
+        socket.emit(customer.id, line); 
+        line++  
+      });
+
+    });
+
+  });
+
+  socket.on('userCutting', (id) => { 
+
+    Queue.update(
+      { status: 1 },
+      { where: { id: id } },
+    );
+
+    Queue.findAll({
+      where: {
+        status: 0, 
+      }
+    }).then(queue => {
+      
+      line = 1
+
+      queue.forEach(customer => {        
+        socket.emit(customer.id, line); 
+        line++  
+      });
+
+    });
+
+  });
+
+  socket.on('disconnect', () => {
+    
+    // var cookief =socket.handshake.headers.cookie; 
+    // var cookies = cookie.parse(socket.handshake.headers.cookie);
+    // console.log(cookies); 
+    // Queue.destroy({
+    //   where: {
+    //     id: id,  
+    //   }
+    // }); 
+
+    Queue.findAll({
+      where: {
+        status: 0, 
+      }
+    }).then(queue => {
+      
+      line = 1
+
+      queue.forEach(customer => {        
+        socket.emit(customer.id, line); 
+        line++  
+      });
+
+    });
+
+  });
+
+}); 
+
+http.listen(3002, () => {
+  console.log('listening on *:8000');
 });

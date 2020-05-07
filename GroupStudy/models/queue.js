@@ -19,10 +19,8 @@ module.exports = function(sequelize, DataTypes) {
       getterMethods: {
         currentStatus() {
           if (this.status == 0) 
-            return "PENDING"
-          else if (this.status == 1) 
             return "WAITING"
-          else if (this.status == 2)
+          else if (this.status == 1) 
             return "CUTTING"
         }
       },

@@ -1,0 +1,26 @@
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+  var socket = io(); 
+  socket.emit('newUserWaiting');
+</script>
+
+<section class="u-full-width" style="margin-top: 10%">
+  <div class="container centered">
+    <div class="twelve columns">
+
+      <h2 class="text-center">Company Name</h2>
+      <hr style="height:1px;color:#fc2637;background-color:#fc2637;border:none;">
+      <label class="text-center">Your Place In Line</label>
+      <h2 class="text-center extra-padding-top-2" id="line"></h2>       
+
+    </div>
+  </div>
+  </div>
+</section>
+
+<script> 
+  socket.on("{{id}}", function(msg){
+    $('#line').html(msg); 
+  });
+</script>
