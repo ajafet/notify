@@ -6,21 +6,21 @@ const hbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 
 const session = require('express-session')({
-  secret: "This is a big long secret lama string.", 
+  secret: "This is a big long secret lama string.",
   resave: true,
-  saveUninitialized: true, 
+  saveUninitialized: true,
 });
 const sharedsession = require("express-socket.io-session");
 
-const app = express(); 
-app.set('port', 8000);
+const app = express();
+app.set('port', process.env.PORT);
 
 app.engine('hbs', hbs({
   extname: 'hbs',
   defaultLayout: 'main',
   layoutsDir: __dirname + '/views/layouts/',
 }));
- 
+
 app.set('view engine', 'hbs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'static')));
 const http = require('http').createServer(app);
 const io = require('socket.io').listen(http);
 
-app.use(session); 
+app.use(session);
 io.use(sharedsession(session));
 
 //////////////////////////////////////////////////////////////////
@@ -85,12 +85,12 @@ app.get('/english/waiting', (request, response) => {
   }).then(user => {
 
     if (request.session.queue) {
-      response.render("user/english_waiting", {id: request.session.queue.id, companyName: user.company_name}); 
+      response.render("user/english_waiting", {id: request.session.queue.id, companyName: user.company_name});
     } else {
-      response.redirect("/"); 
+      response.redirect("/");
     }
 
-  }); 
+  });
 
 });
 
@@ -99,8 +99,8 @@ app.get('/spanish', (request, response) => {
 });
 
 app.get('/spanish/empezar', (request, response) => {
-  response.render("user/spanish_empezar"); 
-}); 
+  response.render("user/spanish_empezar");
+});
 
 app.post('/spanish/empezar/completar', (request, response) => {
 
@@ -129,24 +129,24 @@ app.post('/spanish/empezar/completar', (request, response) => {
     status: 0,
   }).then(queue => {
     request.session.queue = queue;
-    response.redirect("/spanish/esperando"); 
+    response.redirect("/spanish/esperando");
   });
 
 });
 
-app.get('/spanish/esperando', (request, response) => { 
+app.get('/spanish/esperando', (request, response) => {
 
   Users.findOne({
     where: { id : 1}
   }).then(user => {
 
     if (request.session.queue) {
-      response.render("user/spanish_esperando", {id: request.session.queue.id, companyName: user.company_name});  
+      response.render("user/spanish_esperando", {id: request.session.queue.id, companyName: user.company_name});
     } else {
-      response.redirect("/"); 
+      response.redirect("/");
     }
 
-  }); 
+  });
 
 });
 
@@ -155,9 +155,9 @@ app.get('/spanish/esperando', (request, response) => {
 app.get('/admin', (request, response) => {
 
   if (request.session.admin) {
-    response.redirect("/admin/waiting"); 
+    response.redirect("/admin/waiting");
   } else {
-    response.redirect("/login"); 
+    response.redirect("/login");
   }
 
 });
@@ -175,13 +175,13 @@ app.post('/action', (request,response) => {
   }).then(user => {
 
     if (user.password == password) {
-      request.session.admin = user; 
-      response.redirect("/admin/waiting"); 
+      request.session.admin = user;
+      response.redirect("/admin/waiting");
     } else {
-      response.render("admin/login", {invalid: true, password: password}); 
+      response.render("admin/login", {invalid: true, password: password});
     }
 
-  }); 
+  });
 
 });
 
@@ -189,16 +189,16 @@ app.get('/admin/waiting', (request, response) => {
 
   if (request.session.admin) {
 
-    Queue.findAll({ 
+    Queue.findAll({
       where: {
-        status: 0, 
+        status: 0,
       }
     }).then(queue => {
-      response.render("admin/waiting", { queue: queue }); 
+      response.render("admin/waiting", { queue: queue });
     });
 
   } else {
-    response.redirect("/login"); 
+    response.redirect("/login");
   }
 
 });
@@ -209,16 +209,16 @@ app.get('/admin/cutting', (request, response) => {
 
     Queue.findAll({
       where: {
-        status: 1, 
+        status: 1,
       }
     }).then(queue => {
-      response.render("admin/cutting", { queue: queue }); 
+      response.render("admin/cutting", { queue: queue });
     });
 
   } else {
-    response.redirect("/login"); 
+    response.redirect("/login");
   }
-  
+
 });
 
 app.get('/admin/account', (request, response) => {
@@ -231,8 +231,8 @@ app.get('/admin/account', (request, response) => {
       response.render("admin/account", { user: user });
     });
 
-  } else { 
-    response.redirect("/login"); 
+  } else {
+    response.redirect("/login");
   }
 
 });
@@ -258,28 +258,28 @@ app.post('/admin/account/update', (request, response) => {
     return
   }
 
-  Users.update({ 
+  Users.update({
     password: newPassword,
-    company_name: companyName,  
-  }, { 
-    where: { id: 1 } 
-  }).then( queue => { 
+    company_name: companyName,
+  }, {
+    where: { id: 1 }
+  }).then( queue => {
 
-    response.redirect("/admin/waiting"); 
-    
-  }); 
+    response.redirect("/admin/waiting");
+
+  });
 
 });
 
 app.get('/admin/logoff', (request,response) => {
 
   if (request.session.admin) {
-    delete request.session.admin; 
+    delete request.session.admin;
   	response.redirect("/login");
   } else {
-    response.redirect("/login"); 
+    response.redirect("/login");
   }
-  
+
 });
 
 //////////////////////////////////////////////////////////////////
@@ -290,61 +290,61 @@ io.on('connection', (socket) => {
 
     Queue.findAll({
       where: {
-        status: 0, 
+        status: 0,
       }
     }).then(queue => {
-      
+
       line = 1
-  
-      queue.forEach(customer => {        
-        io.emit(customer.id, line); 
-        line++  
+
+      queue.forEach(customer => {
+        io.emit(customer.id, line);
+        line++
       });
-  
+
     });
 
-    io.emit("addNewCut"); 
+    io.emit("addNewCut");
 
-  }); 
+  });
 
-  socket.on('userCutting', (ID) => { 
+  socket.on('userCutting', (ID) => {
 
-    Queue.update({ 
-      status: 1, 
-    }, { 
-      where: { id: ID } 
-    }).then( queue => { 
+    Queue.update({
+      status: 1,
+    }, {
+      where: { id: ID }
+    }).then( queue => {
 
-      io.emit(ID, "cutting"); 
-      
-    }); 
+      io.emit(ID, "cutting");
+
+    });
 
     Queue.findAll({
       where: {
-        status: 0, 
+        status: 0,
       }
     }).then(queue => {
-      
-      line = 1
-  
-      queue.forEach(customer => {        
 
-        io.emit(customer.id, line); 
-        line++  
+      line = 1
+
+      queue.forEach(customer => {
+
+        io.emit(customer.id, line);
+        line++
 
       });
-  
+
     });
 
   });
 
-  socket.on('userDoneCutting', (id) => { 
+  socket.on('userDoneCutting', (id) => {
 
     Queue.destroy({
       where: {
-        id: id,   
+        id: id,
       }
-    }); 
+    });
 
   });
 
@@ -355,28 +355,28 @@ io.on('connection', (socket) => {
       Queue.findOne({
         where: { id : socket.handshake.session.queue.id }
       }).then(queue => {
-    
+
         if (queue.status == 0) {
 
-          io.emit("addNewCut"); 
-  
-          queue.destroy(); 
+          io.emit("addNewCut");
 
-        } 
+          queue.destroy();
+
+        }
 
         delete socket.handshake.session.queue;
-        socket.handshake.session.save(); 
-    
-      }); 
+        socket.handshake.session.save();
+
+      });
 
     }
 
   });
 
-}); 
+});
 
 //////////////////////////////////////////////////////////////////
 
 http.listen(app.get('port'), () => {
   console.log('listening on ' + app.get('port'));
-}); 
+});
