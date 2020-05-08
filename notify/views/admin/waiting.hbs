@@ -1,1 +1,63 @@
-<p>HTML for waiting Goes here</p>
+<div class="navBar" id="mainNavBar">
+  <a href="/admin/waiting">Waiting</a>
+  <a href="/admin/cutting">Cutting</a>
+  <a href="/admin/account">Account</a>
+
+  <div class="topnav-right">
+    <a href="/admin/logoff">Log Off</a>
+  </div> 
+
+</div>
+
+<section class="" style="margin: 0% 10% 5% 10%;">
+
+    <h1 class="text-center" style="padding-top:2%;padding-bottom:2%">Waiting</h1>
+    
+    <table class="u-full-width">
+        <thead>
+            <tr>
+                <th style="width: 33%;text-align:center;">Name</th>
+                <th style="width: 33%;text-align:center;">Phone #</th>
+                <th style="width: 33%;text-align:center;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {{#queue}}
+                <tr id="{{id}}">
+                    <td style="text-align:center;">{{name}}</td>
+                    <td style="text-align:center;">{{phone_number}}</td> 
+                    <td style="text-align:center;"><button class="button-primary" id="{{id}}">Start Cutting</button></td>
+                </tr>
+            {{/queue}}
+
+        </tbody>
+    </table>   
+</section>
+
+<script>
+
+    function openDrawerMenu(){
+        var x = document.getElementById("mainNavBar");
+        if (x.className === "navBar"){
+            x.className += " responsive";
+        } else {
+            x.className = "navBar";
+        }
+    }
+    
+    var socket = io(); 
+
+    $(".button-primary").click(function() {
+
+        socket.emit('userCutting', this.id);
+        $('#'+this.id).remove();
+
+    });
+
+    socket.on("addNewCut", function(msg){
+        location.reload();
+    });
+    
+
+</script>

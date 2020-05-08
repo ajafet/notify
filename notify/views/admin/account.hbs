@@ -1,1 +1,58 @@
-<p>HTML for Account Goes here</p>
+<div class="navBar" id="mainNavBar">
+  <a href="/admin/waiting">Waiting</a>
+  <a href="/admin/cutting">Cutting</a>
+  <a href="/admin/account">Account</a>
+
+  <div class="topnav-right">
+    <a href="/admin/logoff">Log Off</a>
+  </div> 
+
+</div>
+
+<section class="u-full-width" style="margin-top: 10%">
+  <div class="container centered">
+    <div class="twelve columns">
+
+      <form action="/admin/account/update" method="POST">
+        <div class="row">
+          <div class="six columns">
+            <label>New Password</label>
+            <input class="u-full-width remove-margin-bottom" type="password" name="newPassword" value="{{newPassword}}">
+            {{#if newPasswordError}}
+              <p class="error">must be at least 4 characters</p>
+            {{else}}
+              <p class="space">.</p>
+            {{/if}}
+          </div>
+          <div class="six columns">
+            <label>Company Name</label>
+            <input class="u-full-width remove-margin-bottom" type="text" name="companyName" value="{{user.company_name}}{{companyName}}">
+            {{#if companyNameError}}
+              <p class="error">can not be empty</p>
+            {{else}}
+              <p class="space">.</p>
+            {{/if}}
+          </div>
+        </div>
+
+        <p class="text-center extra-padding-top-3">
+          <input class="button-primary" type="submit" value="Update">
+        </p>
+
+      </form>
+
+    </div>
+  </div>
+  </div>
+</section>
+
+<script>
+    function openDrawerMenu(){
+        var x = document.getElementById("mainNavBar");
+        if (x.className === "navBar"){
+            x.className += " responsive";
+        } else {
+            x.className = "navBar";
+        }
+    }
+</script>

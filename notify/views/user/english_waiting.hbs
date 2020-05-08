@@ -1,12 +1,15 @@
-
 <section class="u-full-width" style="margin-top: 10%">
   <div class="container centered">
     <div class="twelve columns">
 
-      <h2 class="text-center">Company Name</h2>
-      <hr style="height:1px;color:#fc2637;background-color:#fc2637;border:none;">
-      <label class="text-center">Your Place In Line</label>
-      <h2 class="text-center extra-padding-top-2" id="line"></h2>       
+      <h2 class="text-center" id="companyName">{{companyName}}</h2>
+      <hr style="height:1px;color:#fc2637;background-color:#fc2637;border:none;" id="redLine">
+      <label class="text-center" id="placeLineHeader">Your Place In Line</label>
+      <h2 class="text-center extra-padding-top-2" id="line"></h2>      
+
+      <h2 class="text-center" id="yourNextText" style="content: none;">Your Next</h2> 
+      <label class="text-center" id="pleaseWalkText" style="content: none;">Please Walk In</label>
+
 
     </div>
   </div>
@@ -14,9 +17,32 @@
 </section>
 
 <script> 
+
+  $('#yourNextText').hide(); 
+  $('#pleaseWalkText').hide(); 
+
   var socket = io(); 
   socket.emit('userWaiting');
   socket.on({{id}}, function(msg){
-    $('#line').html(msg); 
+
+    if (msg == "cutting") {
+
+      $('#companyName').hide(); 
+      $("#redLine").hide(); 
+      $('#placeLineHeader').hide();
+      $('#line').hide();
+
+      $('#yourNextText').show(); 
+      $('#pleaseWalkText').show(); 
+
+      socket.disconnect();
+
+    } else {
+
+      $('#line').html(msg); 
+
+    }
+
   });
+  
 </script>

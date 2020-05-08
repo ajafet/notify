@@ -80,11 +80,17 @@ app.post('/english/get_started/submit', (request, response) => {
 
 app.get('/english/waiting', (request, response) => {
 
-  if (request.session.queue) {
-    response.render("user/english_waiting", {id: request.session.queue.id}); 
-  } else {
-    response.redirect("/"); 
-  }
+  Users.findOne({
+    where: { id : 1}
+  }).then(user => {
+
+    if (request.session.queue) {
+      response.render("user/english_waiting", {id: request.session.queue.id, companyName: user.company_name}); 
+    } else {
+      response.redirect("/"); 
+    }
+
+  }); 
 
 });
 
@@ -130,78 +136,19 @@ app.post('/spanish/empezar/completar', (request, response) => {
 
 app.get('/spanish/esperando', (request, response) => { 
 
-  if (request.session.queue) {
-    response.render("user/spanish_esperando", {id: request.session.queue.id});  
-  } else {
-    response.redirect("/"); 
-  }
+  Users.findOne({
+    where: { id : 1}
+  }).then(user => {
 
-});
-
-io.on('connection', (socket) => {
-
-  socket.on("userWaiting", (id) => {
-
-    Queue.findAll({
-      where: {
-        status: 0, 
-      }
-    }).then(queue => {
-      
-      line = 1
-  
-      queue.forEach(customer => {        
-        io.emit(customer.id, line); 
-        // console.log(customer.id)
-        line++  
-      });
-  
-    });
+    if (request.session.queue) {
+      response.render("user/spanish_esperando", {id: request.session.queue.id, companyName: user.company_name});  
+    } else {
+      response.redirect("/"); 
+    }
 
   }); 
 
-  socket.on('userCutting', (id) => { 
-
-    Queue.update(
-      { status: 1 },
-      { where: { id: id } },
-    );
-
-    Queue.findAll({
-      where: {
-        status: 0, 
-      }
-    }).then(queue => {
-      
-      line = 1
-  
-      queue.forEach(customer => {        
-        io.emit(customer.id, line); 
-        // console.log(customer.id)
-        line++  
-      });
-  
-    });
-
-  });
-
-  socket.on('disconnect', () => {
-
-    if (socket.handshake.session.queue) {
-
-      Queue.destroy({
-        where: {
-          id: socket.handshake.session.queue.id,  
-        }
-      }); 
-
-      delete socket.handshake.session.queue;
-      socket.handshake.session.save();   
-    }
-
-  });
-
-}); 
+});
 
 //////////////////////////////////////////////////////////////////
 
@@ -228,9 +175,9 @@ app.post('/action', (request,response) => {
   }).then(user => {
 
     if (user.password == password) {
+      request.session.admin = user; 
       response.redirect("/admin/waiting"); 
     } else {
-      request.session.admin = user; 
       response.render("admin/login", {invalid: true, password: password}); 
     }
 
@@ -242,7 +189,7 @@ app.get('/admin/waiting', (request, response) => {
 
   if (request.session.admin) {
 
-    Queue.findAll({
+    Queue.findAll({ 
       where: {
         status: 0, 
       }
@@ -277,10 +224,50 @@ app.get('/admin/cutting', (request, response) => {
 app.get('/admin/account', (request, response) => {
 
   if (request.session.admin) {
-    response.render("admin/account");
-  } else {
+
+    Users.findOne({
+      where: { id: request.session.admin.id }
+    }).then(user => {
+      response.render("admin/account", { user: user });
+    });
+
+  } else { 
     response.redirect("/login"); 
   }
+
+});
+
+app.post('/admin/account/update', (request, response) => {
+
+  newPassword = request.body.newPassword
+  companyName = request.body.companyName
+
+  newPasswordError = false
+  companyNameError = false
+
+  if (newPassword.trim().length < 4) {
+    newPasswordError = true
+  }
+
+  if (companyName.trim().length == 0) {
+    companyNameError = true
+  }
+
+  if (newPasswordError || companyNameError) {
+    response.render("admin/account", {newPasswordError : newPasswordError, companyNameError: companyNameError, newPassword: newPassword, companyName: companyName})
+    return
+  }
+
+  Users.update({ 
+    password: newPassword,
+    company_name: companyName,  
+  }, { 
+    where: { id: 1 } 
+  }).then( queue => { 
+
+    response.redirect("/admin/waiting"); 
+    
+  }); 
 
 });
 
@@ -294,6 +281,101 @@ app.get('/admin/logoff', (request,response) => {
   }
   
 });
+
+//////////////////////////////////////////////////////////////////
+
+io.on('connection', (socket) => {
+
+  socket.on("userWaiting", (id) => {
+
+    Queue.findAll({
+      where: {
+        status: 0, 
+      }
+    }).then(queue => {
+      
+      line = 1
+  
+      queue.forEach(customer => {        
+        io.emit(customer.id, line); 
+        line++  
+      });
+  
+    });
+
+    io.emit("addNewCut"); 
+
+  }); 
+
+  socket.on('userCutting', (ID) => { 
+
+    Queue.update({ 
+      status: 1, 
+    }, { 
+      where: { id: ID } 
+    }).then( queue => { 
+
+      io.emit(ID, "cutting"); 
+      
+    }); 
+
+    Queue.findAll({
+      where: {
+        status: 0, 
+      }
+    }).then(queue => {
+      
+      line = 1
+  
+      queue.forEach(customer => {        
+
+        io.emit(customer.id, line); 
+        line++  
+
+      });
+  
+    });
+
+  });
+
+  socket.on('userDoneCutting', (id) => { 
+
+    Queue.destroy({
+      where: {
+        id: id,   
+      }
+    }); 
+
+  });
+
+  socket.on('disconnect', () => {
+
+    if (socket.handshake.session.queue) {
+
+      Queue.findOne({
+        where: { id : socket.handshake.session.queue.id }
+      }).then(queue => {
+    
+        if (queue.status == 0) {
+
+          io.emit("addNewCut"); 
+  
+          queue.destroy(); 
+
+        } 
+
+        delete socket.handshake.session.queue;
+        socket.handshake.session.save(); 
+    
+      }); 
+
+    }
+
+  });
+
+}); 
+
+//////////////////////////////////////////////////////////////////
 
 http.listen(app.get('port'), () => {
   console.log('listening on ' + app.get('port'));
