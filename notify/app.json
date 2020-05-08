@@ -1,0 +1,7 @@
+{
+  "name": "Notify",
+  "description" : "A Web Application for Notifications",
+  "repository" : "https://github.com/danielleal03/notify.git",
+  "keywords" : ["node", "express", "static"],
+  "image" : "heroku/nodejs"
+}

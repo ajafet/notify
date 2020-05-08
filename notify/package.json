@@ -14,9 +14,9 @@
   "author": "Eddy Angel Daniel",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/UTRGV-CS-3342/project-team-7/issues"
+    "url": "https://github.com/danielleal03/notify.git"
   },
-  "homepage": "https://github.com/UTRGV-CS-3342/project-team-7#readme",
+  "homepage": "https://github.com/danielleal03/notify.git",
   "dependencies": {
     "bcrypt": "^3.0.6",
     "express": "^4.17.1",
