@@ -1,7 +1,7 @@
 {
-  "name": "project-team-7",
+  "name": "Notify",
   "version": "1.0.0",
-  "description": "Final Project",
+  "description": "Notify Web Application",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,10 +9,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/UTRGV-CS-3342/project-team-7.git"
+    "url": "git+https://github.com/danielleal03/notify.git"
   },
-  "author": "Eddy Angel Daniel",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/danielleal03/notify.git"
   },
