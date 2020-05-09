@@ -1,3 +1,5 @@
+debug = false          
+
 const { Queue, Users } = require('./models');
 
 const express = require('express');
@@ -13,7 +15,11 @@ const session = require('express-session')({
 const sharedsession = require("express-socket.io-session");
 
 const app = express();
-app.set('port', process.env.PORT);
+
+if (debug) 
+  app.set('port', 8000); 
+else 
+  app.set('port', process.env.PORT);
 
 app.engine('hbs', hbs({
   extname: 'hbs',
