@@ -4,46 +4,10 @@
   <div class="container centered">
     <div class="twelve columns">
 
-      <h2 class="text-center" id="companyName">{{companyName}}</h2>
-      <hr style="height:1px;color:#fc2637;background-color:#fc2637;border:none;" id="redLine">
-      <label class="text-center" id="placeLineHeader">Tu Lugar en la Fila</label>
-      <h2 class="text-center extra-padding-top-2" id="line"></h2>   
-
-      <h2 class="text-center" id="yourNextText" style="content: none;">Eres la Siguiente Persona</h2> 
-      <label class="text-center" id="pleaseWalkText" style="content: none;">Por Favor Entra</label>
+      <h2 class="text-center" style="content: none;">Gracias</h2> 
+      <label class="text-center" style="content: none;">Por Favor Espere su Turno</label>  
 
     </div>
   </div>
   </div>
 </section>
-
-<script> 
-
-  $('#yourNextText').hide(); 
-  $('#pleaseWalkText').hide(); 
-
-  var socket = io(); 
-  socket.emit('userWaiting');
-  socket.on({{id}}, function(msg){
-
-    if (msg == "cutting") {
-
-      $('#companyName').hide(); 
-      $("#redLine").hide(); 
-      $('#placeLineHeader').hide();
-      $('#line').hide();
-
-      $('#yourNextText').show(); 
-      $('#pleaseWalkText').show(); 
-
-      socket.disconnect();
-
-    } else {
-
-      $('#line').html(msg); 
-
-    }
-
-  });
-
-</script>

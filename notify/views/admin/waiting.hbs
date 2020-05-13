@@ -18,15 +18,17 @@
     <table class="u-full-width">
         <thead>
             <tr>
-                <th style="width: 33%;text-align:center;">Name</th>
-                <th style="width: 33%;text-align:center;">Phone #</th>
-                <th style="width: 33%;text-align:center;">Action</th>
+                <th style="width: 25%;text-align:center;">Place</th>
+                <th style="width: 25%;text-align:center;">Name</th>
+                <th style="width: 25%;text-align:center;">Phone #</th>
+                <th style="width: 25%;text-align:center;">Action</th>
             </tr>
         </thead>
         <tbody>
 
             {{#queue}}
                 <tr id="{{id}}">
+                    <th style="text-align:center;">{{inc @index}}</th>
                     <td style="text-align:center;">{{name}}</td>
                     <td style="text-align:center;">{{phone_number}}</td> 
                     <td style="text-align:center;"><button class="button-primary" id="{{id}}">Start Cutting</button></td>
@@ -48,18 +50,26 @@
         }
     }
     
-    var socket = io(); 
+    var socket = io();  
 
-    $(".button-primary").click(function() {
+    $(".button-primary").click(function() { 
 
-        socket.emit('userCutting', this.id);
-        $('#'+this.id).remove();
+        $.ajax({
+            type: 'POST',
+            url: '/admin/update/waiting_to_cutting',
+            data: { 
+                'id': this.id, 
+            },
+        });
 
     });
 
-    socket.on("addNewCut", function(msg){
+    socket.on("cutAdded", function(msg){  
         location.reload();
     });
-    
+
+    socket.on("cutUpdated", function(msg){
+        location.reload();
+    });
 
 </script>

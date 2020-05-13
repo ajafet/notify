@@ -15,6 +15,9 @@ module.exports = function(sequelize, DataTypes) {
       status: {
         type: DataTypes.INTEGER,
       },
+      language: {
+        type: DataTypes.INTEGER, 
+      },
     }, {
       getterMethods: {
         currentStatus() {
@@ -22,7 +25,13 @@ module.exports = function(sequelize, DataTypes) {
             return "WAITING"
           else if (this.status == 1) 
             return "CUTTING"
-        }
+        }, 
+        languageSelected() {
+          if (this.status == 0) 
+            return "ENGLISH"
+          else if (this.status == 1) 
+            return "SPANISH"
+        },
       },
       tableName: 'queue',
       timestamps: false
