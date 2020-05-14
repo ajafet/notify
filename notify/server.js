@@ -1,4 +1,4 @@
-debug = false          
+debug = false            
 
 const { Queue, Users } = require('./models'); 
 
@@ -13,14 +13,14 @@ const session = require('express-session')({
   resave: true,
   saveUninitialized: true,
 });
-const sharedsession = require("express-socket.io-session");
+const sharedsession = require("express-socket.io-session"); 
 
 const app = express();
 
 if (debug) 
   app.set('port', 8000); 
 else 
-  app.set('port', process.env.PORT);
+  app.set('port', process.env.PORT); 
 
 app.engine('hbs', hbs({
   extname: 'hbs',
@@ -39,7 +39,8 @@ const io = require('socket.io').listen(http);
 app.use(session);
 io.use(sharedsession(session));
 
-const telnyx = require('telnyx')(process.env.TELNYX_API);   
+const { RestClient } = require('@signalwire/node');
+const client = new RestClient(process.env.PROJECTID, process.env.TOKEN, { signalwireSpaceUrl: process.env.SPACEURL});  
 
 helpers.registerHelper("inc", function(value) {
   return value + 1;  
@@ -62,7 +63,7 @@ app.get('/', (request, response) => {
 app.get('/english', (request, response) => {
 
   Users.findOne({
-    where: { id : 1}
+    where: { id : 1 }
   }).then(user => {
 
     response.render("user/english_instructions", {companyName: user.company_name});
@@ -116,25 +117,19 @@ app.post('/english/get_started/submit', (request, response) => {
 
 app.get('/english/waiting', (request, response) => {
 
-  Users.findOne({
-    where: { id : 1}
-  }).then(user => {
-
-    if (request.session.queue) {
-      delete request.session.queue;
-      response.render("user/english_waiting", {companyName: user.company_name});
-    } else {
-      response.redirect("/");
-    }
-
-  });
+  if (request.session.queue) {
+    delete request.session.queue;
+    response.render("user/english_waiting");
+  } else {
+    response.redirect("/");
+  }
 
 });
 
 app.get('/spanish', (request, response) => {
 
   Users.findOne({
-    where: { id : 1}
+    where: { id : 1 }
   }).then(user => {
 
     response.render("user/spanish_instructions", {companyName: user.company_name});
@@ -188,18 +183,12 @@ app.post('/spanish/empezar/completar', (request, response) => {
 
 app.get('/spanish/esperando', (request, response) => {
 
-  Users.findOne({
-    where: { id : 1}
-  }).then(user => {
-
-    if (request.session.queue) {
-      delete request.session.queue;
-      response.render("user/spanish_esperando", {companyName: user.company_name}); 
-    } else {
-      response.redirect("/");
-    }
-
-  });
+  if (request.session.queue) {
+    delete request.session.queue;
+    response.render("user/spanish_esperando");  
+  } else {
+    response.redirect("/"); 
+  }
 
 });
 
@@ -296,12 +285,7 @@ app.post('/admin/update/waiting_to_cutting', (request, response) => {
           message = queue.name + " Tu Sigues, Por Favor de Entrar"; 
         }
 
-        telnyx.messages.create({ 
-            'from': '+19563911918',
-            'to': '+1' + queue.phone_number, 
-            'text': message, 
-          },
-        );
+        client.messages.create({from: "+19563796237", body: message, to: "+1"+queue.phone_number}).done(); 
 
         io.emit("cutUpdated");  
 
