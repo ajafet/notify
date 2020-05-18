@@ -5,10 +5,12 @@
 
 // database connection
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: 'data.sqlite'
+const sequelize = new Sequelize(
+  process.env.DATABASE_URL, {
+  dialect: "postgress",
+  protocol: "postgress", 
 });
+
 
 // import models
 const Queue = sequelize.import("./queue.js");
