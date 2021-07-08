@@ -8,6 +8,11 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize(
   process.env.DATABASE_URL, {
   dialect: "postgress",
+  dialectOptions: {
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  },
   protocol: "postgress",
   pool: {
     max: 1,
